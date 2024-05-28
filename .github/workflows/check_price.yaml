@@ -1,0 +1,26 @@
+name: Check price
+
+on:
+  schedule:
+  # - cron: '*/5 * * * *' # for testing
+  - cron: '0 14 * * 1'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Python setup
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - run: pip install -r requirements.txt
+
+      - name: Send price notification
+        env:
+          PUSH_API_KEY: ${{ secrets.PUSH_API_KEY }}
+        run: python check_price.py
